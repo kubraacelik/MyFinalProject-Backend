@@ -34,7 +34,7 @@ namespace Business.Concrete
 
 
         [CacheRemoveAspect("IProductService.Get")] //IProductService'deki tüm Get'leri iptal et
-        [SecuredOperation("product.add, admin")]
+        //[SecuredOperation("product.add, admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
