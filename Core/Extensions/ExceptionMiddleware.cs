@@ -22,28 +22,28 @@ namespace Core.Extensions
         {
             try
             {
-                await _next(httpContext);
+                await _next(httpContext); //hata yoksa
             }
             catch (Exception e)
             {
-                await HandleExceptionAsync(httpContext, e);
+                await HandleExceptionAsync(httpContext, e); //hata varsa
             }
         }
 
         private Task HandleExceptionAsync(HttpContext httpContext, Exception e)
         {
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            httpContext.Response.ContentType = "application/json"; //tarayıcıya json yollandı
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError; //hata kodu InternalServerError
 
             string message = "Internal Server Error";
-            IEnumerable<ValidationFailure> errors;
-            if (e.GetType() == typeof(ValidationException))
+            IEnumerable<ValidationFailure> errors; //hataları liste yap
+            if (e.GetType() == typeof(ValidationException)) //eğer ValidationException varsa hata kodu bunu ver 
             {
                 message = e.Message;
                 errors = ((ValidationException)e).Errors;
                 httpContext.Response.StatusCode = 400;
 
-                return httpContext.Response.WriteAsync(new ValidationErrorDetails
+                return httpContext.Response.WriteAsync(new ValidationErrorDetails //validation'a uygun hata listesi
                 {
                     StatusCode = 400,
                     Message = message,
@@ -51,7 +51,7 @@ namespace Core.Extensions
                 }.ToString());
             }
 
-            return httpContext.Response.WriteAsync(new ErrorDetails
+            return httpContext.Response.WriteAsync(new ErrorDetails //sistem hata verirse burayı döndür
             {
                 StatusCode = httpContext.Response.StatusCode,
                 Message = message
